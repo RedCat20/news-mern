@@ -55,7 +55,7 @@ const createArticles = async (parsedPost, query) => {
           description: post.description[0],
           link: post.link[0],
           pubDate: post.pubDate[0],
-          categories: post.categories,
+          categories: post.category,
         }))
       );
     }
