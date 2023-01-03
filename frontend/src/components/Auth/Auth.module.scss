@@ -1,0 +1,34 @@
+.container {
+  max-width: 100%;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.form {
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  button {
+    margin-top: 30px;
+  }
+}
+
+.item {
+  width: 100%;
+
+  margin-bottom: 30px;
+}
+
+.labelText {
+  margin-bottom: 10px;
+  color: gray;
+  font-size: 20px;
+}
+
+.error {
+  color: gray;
+  margin-top: 30px;
+}

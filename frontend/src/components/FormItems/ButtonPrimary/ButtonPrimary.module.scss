@@ -1,0 +1,12 @@
+.button {
+  height: 100%;
+  min-height: 40px;
+  font-size: 16px;
+  background: cornflowerblue;
+  border: none;
+  color: #ffffff;
+
+  &:hover {
+    cursor: pointer;
+  }
+}

@@ -1,0 +1,42 @@
+.filterWrapper {
+  padding: 0 15px;
+  border-radius: 5px;
+  max-width: 300px;
+
+  label span {
+    display: block;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    @media screen and (max-width: 991px) {
+      max-width: 100%;
+    }
+    @media screen and (max-width: 575px) {
+      max-width: 300px;
+    }
+  }
+}
+
+
+.filter {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  input {
+    margin-right: 10px;
+    width: 20px;
+    min-width: 20px;
+    height: 20px;
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.info {
+  font-size: 14px;
+  font-style: italic;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}

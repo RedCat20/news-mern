@@ -1,0 +1,29 @@
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  grid-gap: 15px;
+  height: calc(100vh - 30px);
+
+  color: darkslategray;
+
+  max-width: 1440px;
+  margin: 15px auto;
+}
+
+.main {
+  border: 1px solid #cfcfcf;
+  padding: 60px;
+
+  @media screen and (max-width: 991px) {
+    padding: 45px;
+  }
+  @media screen and (max-width: 767px) {
+    padding: 30px;
+  }
+
+  background: #ffffff;
+
+  h1 {
+    margin-bottom: 30px;
+  }
+}

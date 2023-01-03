@@ -1,0 +1,40 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #cfcfcf;
+  padding: 15px 60px;
+  background: #ffffff;
+
+  @media screen and (max-width: 767px) {
+    padding: 10px 20px;
+  }
+  .links {
+    & > a:not(:last-child) {
+      margin-right: 30px;
+    }
+  }
+}
+
+.link {
+  color: black;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: bold;
+  color: gray;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.logo {
+  width: 100px;
+}
+
+.userLink {
+  color: gray;
+}

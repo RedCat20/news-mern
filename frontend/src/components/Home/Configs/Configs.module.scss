@@ -1,0 +1,30 @@
+
+.configPosts {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+  border-top: 1px solid #cfcfcf;
+  border-bottom: 1px solid #cfcfcf;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.itemWrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.select {
+  width: 90px;
+  padding: 0 10px;
+  height: 30px;
+
+  font-size: 14px;
+}
