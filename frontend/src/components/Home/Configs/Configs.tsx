@@ -1,5 +1,4 @@
 import React, {ChangeEvent, FC, useEffect, useLayoutEffect, useState} from 'react';
-import Select from 'react-select';
 import styles from "./Configs.module.scss";
 import {useSearchParams} from "react-router-dom";
 
