@@ -1,7 +1,7 @@
 import xml2js from "xml2js";
 import https from "https";
 
-import { parentPort} from 'worker_threads';
+import { parentPort } from 'worker_threads';
 
 const parseXmlToJson = async (data) => {
   const parser = new xml2js.Parser('');

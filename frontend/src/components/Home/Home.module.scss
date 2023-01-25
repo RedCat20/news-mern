@@ -32,3 +32,36 @@
     grid-row-gap: 30px;
   }
 }
+
+.configPosts {
+  display: flex;
+  align-items: center;
+  gap: 45px;
+  border-top: 1px solid #cfcfcf;
+  border-bottom: 1px solid #cfcfcf;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  margin-bottom: 30px;
+
+  @media screen and (max-width: 767px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.itemWrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+
+  &:nth-child(1) {
+    flex: 1 1 33.33%
+  }
+  &:nth-child(2) {
+    flex: 1 1 33.33%
+  }
+  &:nth-child(3) {
+    flex: 1 1 33.33%
+  }
+}

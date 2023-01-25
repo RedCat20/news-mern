@@ -1,6 +1,32 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 import {basePath} from "../../paths";
 
+interface IParams {
+    currentPage: number;
+    LIMIT: number;
+    sort: string | undefined;
+    filterQueryStr?: string | undefined;
+    searchStr: string | undefined;
+}
+
+const createQuery = (params: IParams): {url: string, method: string, headers: {authorization: string}} => {
+    console.log('params: ', params);
+    const {currentPage, LIMIT, sort, filterQueryStr, searchStr} = params;
+
+    return ({
+        url: `posts` +
+            `?page=${currentPage + 1}` +
+            `&limit=${LIMIT}` +
+            `&sort=pubDate,${sort}` +
+            `&filter=${filterQueryStr || ''}` +
+            `&search=${searchStr}`,
+        method: 'GET',
+        headers: {
+            'authorization': 'Bearer ' + localStorage.getItem('token')
+        },
+    })
+}
+
 export const postsApi = createApi({
     reducerPath: 'posts',
     baseQuery: fetchBaseQuery({
@@ -9,7 +35,7 @@ export const postsApi = createApi({
     tagTypes: ['Post'],
     endpoints: (builder) => ({
         getPosts: builder.query<any, string>({
-            query: () => `posts`,
+            query: (params: any) => { return createQuery(params) },
             providesTags: ['Post'],
         }),
         getPostById: builder.query<any, string>({
@@ -22,6 +48,7 @@ export const postsApi = createApi({
             }),
             providesTags: ['Post'],
         }),
+
         removePostById: builder.mutation({
             query: (id) => ({
                 url: `posts/${id}`,

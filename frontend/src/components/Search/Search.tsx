@@ -1,31 +1,33 @@
-import {FC, MouseEvent, useState} from 'react';
-import {useParams, useSearchParams} from 'react-router-dom';
-
+import {FC, useEffect, useState} from 'react';
+import {useSearchParams} from 'react-router-dom';
 import styles from "./Search.module.scss";
-import ButtonPrimary from "../FormItems/ButtonPrimary/ButtonPrimary";
 import TextInput from "../FormItems/TextInput/TextInput";
+import {useDebounce} from "../../hooks/useDebounce";
 
-interface Props {
-    setSearchStrCallback: (value: string) => void;
-}
+interface Props { }
 
-const Search:FC<Props> = ({setSearchStrCallback}) => {
-    const [searchParams, setSearchParams] = useSearchParams();
+const Search:FC<Props> = () => {
     const [searchStr, setSearchStr] = useState('');
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const onChange = (query: string) => {
+    const searchNews = useDebounce(async(value: any) => {
+        let filter = searchParams.get('filter') ?? '';
+        let sort = searchParams.get('sort') ?? '';
+        setSearchParams({filter: filter, search: value, sort: sort});
+    }, 400);
+
+    const onChange = async (query: string) => {
         setSearchStr(query);
-        //setSearchParams({search: query});
-    }
+        searchNews(query);
+    };
 
-    const onClick = (e: MouseEvent<HTMLButtonElement>) => {
-        setSearchStrCallback(searchStr);
-    }
+    useEffect(() => {
+        setSearchStr(searchParams.get('search') ?? '');
+    }, [searchParams])
 
     return (
         <div className={styles.container}>
-            <TextInput placeholder="Enter some string..." onChange={onChange}/>
-            <ButtonPrimary onClickHandler={onClick}>Search</ButtonPrimary>
+            <TextInput placeholder="Enter some string..." value={searchStr} onChange={onChange}/>
         </div>
     );
 };

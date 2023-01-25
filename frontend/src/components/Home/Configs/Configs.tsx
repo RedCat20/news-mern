@@ -1,38 +1,51 @@
-import React, {ChangeEvent, FC} from 'react';
+import React, {ChangeEvent, FC, useEffect, useLayoutEffect, useState} from 'react';
+import Select from 'react-select';
 import styles from "./Configs.module.scss";
+import {useSearchParams} from "react-router-dom";
+
+const sortOptions = [
+    { value: 'desc', label: 'desc' },
+    { value: 'asc', label: 'asc' },
+];
+
+interface ISortOptions {
+    value: string;
+    label: string;
+    ['string']?: any;
+}
 
 interface Props {
     setSort: (value: string) => void;
-    filters?: string[] | string;
 }
 
-const Configs:FC<Props> = ({setSort, filters}) => {
+const Configs:FC<Props> = ({setSort}) => {
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    const [sortStr, setSortStr] = useState<string>('')
 
     const changeSortHandler = (event: ChangeEvent<HTMLSelectElement>) => {
         setSort(event.target.value);
     }
 
+    useEffect(() => {
+        console.log('sotr:' ,searchParams.get('sort'))
+        const sort = searchParams.get('sort') ?? 'desc';
+        setSortStr(sort);
+    },[searchParams]);
+
+    useLayoutEffect(() => {
+
+    },[]);
+
     return (
-        <div className={styles.configPosts}>
+        <>
+            <span>2) Sort by <b>public date</b>:</span>
 
-            <div className={styles.itemWrapper}>
-                <span>1) Search in <b>titles</b></span>
-            </div>
-
-            <div className={styles.itemWrapper}>
-                <span>2) Sort by <b>public date</b>:</span>
-
-                <select className={styles.select} onChange={changeSortHandler}>
-                    <option value={'desc'}>desc</option>
-                    <option value={'asc'}>asc</option>
-                </select>
-            </div>
-
-            <div className={styles.itemWrapper}>
-                <span>3) Chosen filters: <b>{filters?.length ? filters : 'all'}</b></span>
-            </div>
-
-        </div>
+            <select value={sortStr} className={styles.select} onChange={changeSortHandler}>
+                <option value={'desc'}>desc</option>
+                <option value={'asc'}>asc</option>
+            </select>
+        </>
     );
 };
 

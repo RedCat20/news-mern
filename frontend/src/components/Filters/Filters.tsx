@@ -1,36 +1,61 @@
-import React, {ChangeEvent, FC, useEffect, useRef, useState} from 'react';
-
+import {MouseEvent, ChangeEvent, FC, useCallback, useEffect, useRef, useState} from 'react';
+import {useSearchParams} from 'react-router-dom';
 import styles from './Filters.module.scss';
 import {basePath} from "../../paths";
+import ButtonPrimary from "../FormItems/ButtonPrimary/ButtonPrimary";
 
-interface Props {
-    onChangeCheckboxCallback: (filters: string[]) => void;
+interface IFilterItem {
+    title: string;
+    isChecked: boolean;
 }
 
-const Filter:FC<Props> = ({onChangeCheckboxCallback}) => {
+interface Props {
+    filterQueryStr: string;
+   // onChangeCheckboxCallback: (filters: string[]) => void;
+}
 
-    const [filterOptions, setFilterOptions] = useState<string[]>([]);
+const Filters:FC<Props> = ({filterQueryStr}) => {
 
-    const selectedFilterOptions = useRef<string[]>([]);
+    const [searchParams, setSearchParams] = useSearchParams();
 
-    const getCategories = async () => {
+    const [categories, setCategories] = useState<string[]>([]);
+
+    const [filterOptionsWithCheckboxes, setFilterOptionsWithCheckboxes] = useState<IFilterItem[]>([]);
+
+    const [selectedFilterOptions, setSelectedFilterOptions] = useState<string[]>([]);
+
+    const getCategories = useCallback(async () => {
         let res = await fetch(`${basePath}/categories`);
         let data = await res.json();
-        setFilterOptions(data);
-    }
+        setCategories(data);
+    },[]);
 
     useEffect(() => {
-        getCategories();
+        let newItems: IFilterItem[] = [];
+
+        if (selectedFilterOptions?.length === 0) {
+            newItems = categories.map((item: string) => ({ title: item, isChecked: false }) );
+            setFilterOptionsWithCheckboxes( newItems );
+        } else if (selectedFilterOptions?.length > 0) {
+            newItems = categories.map((item: string) => {
+                return { title: item, isChecked: (selectedFilterOptions.indexOf(item) > -1) };
+            });
+            setFilterOptionsWithCheckboxes( newItems );
+        }
+    }, [categories, selectedFilterOptions]);
+
+    useEffect(() => {
+        getCategories().then(r => r);
     },[]);
 
     const onChangeFilterHandler = (e: ChangeEvent<HTMLInputElement>) => {
-
         const value = e.target.value;
-        const array = selectedFilterOptions.current;
+        let array = [...selectedFilterOptions];
 
         if (e.target.checked) {
-            if (!array.includes(value.toString()))
+            if (!array.includes(value.toString())) {
                 array.push(e.target.value.toString());
+            }
         }
         else if (!e.target.checked) {
             const index = array.indexOf(value.toString());
@@ -39,15 +64,20 @@ const Filter:FC<Props> = ({onChangeCheckboxCallback}) => {
             }
         }
 
-        selectedFilterOptions.current = array;
-
-        onChangeCheckboxCallback(array);
+        setSelectedFilterOptions(array);
     }
 
-    useEffect(() => {
-       // if (allRef.current)
-       //    allRef.current.checked = true;
-    },[]);
+    const setFiltersHandler = (e: MouseEvent<HTMLButtonElement>) => {
+        let params = selectedFilterOptions.join(', ');
+        let search = searchParams.get('search') ?? '';
+        setSearchParams({search: search, filter: params })
+    }
+
+    const resetFiltersHandler = (e: MouseEvent<HTMLButtonElement>) => {
+        setSelectedFilterOptions([]);
+        let search = searchParams.get('search') ?? '';
+        setSearchParams({search: search, filter: '' })
+    }
 
     return (
         <div className={styles.filterWrapper}>
@@ -56,25 +86,29 @@ const Filter:FC<Props> = ({onChangeCheckboxCallback}) => {
 
             <hr/>
 
-            {/*<h5>General</h5>*/}
-            {/*<label className={styles.filter} key={'all'}>*/}
-            {/*    <input ref={allRef} type="checkbox" value={'all'} onChange={onChangeFilterHandler}/>*/}
-            {/*    All categories*/}
-            {/*</label>*/}
+            <ButtonPrimary
+                width={220}
+                onClickHandler={setFiltersHandler}
+            >
+                Set filters
+            </ButtonPrimary>
 
-            {/*<div className={styles.info}>*/}
-            {/*    All items from all categories, not only from popular categories*/}
-            {/*</div>*/}
+            <br/> <br/>
 
-            {/*<hr/>*/}
+            <ButtonPrimary
+                width={220}
+                onClickHandler={resetFiltersHandler}
+            >
+                Reset filters
+            </ButtonPrimary>
 
             <h5>Popular categories</h5>
 
-            {filterOptions?.map((item, idx) => {
+            {filterOptionsWithCheckboxes?.map((item, idx) => {
                 return (
                     <label className={styles.filter} key={idx}>
-                        <input type="checkbox" value={item} onChange={onChangeFilterHandler}/>
-                        <span>{item}</span>
+                        <input type="checkbox" checked={item.isChecked} value={item.title} onChange={onChangeFilterHandler}/>
+                        <span>{item.title}</span>
                     </label>
                 )
             })}
@@ -83,4 +117,4 @@ const Filter:FC<Props> = ({onChangeCheckboxCallback}) => {
     );
 };
 
-export default Filter;
+export default Filters;
